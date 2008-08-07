@@ -2,11 +2,11 @@ def best(myitems, outfile):
   maxl = []
   for x in myitems:
     maxl.append((x[0]/x[1],x))
-    print x
   maxl.sort()
   maxl.reverse()
   
   f = open(outfile, "w")
-  for x in range(10):
-    f.write("<p>%i. (%f GB/$) <a href=\"%s\">%s</a> - $%s</p>\n" % (x+1,maxl[x][0],maxl[x][1][3],maxl[x][1][2].decode('UTF-8'),maxl[x][1][1]))
+  for i, (gbprice, item) in zip(range(10), maxl):
+    s = u"<p>%i. (%f GB/$) <a href=\"%s\">%s</a> - $%s</p>\n" % (i+1, gbprice, item[3], item[2], item[1])
+    f.write(s.encode("UTF-8"))
 
