@@ -60,7 +60,7 @@ for entry in searches:
      size *= 1000
    if out[1] == 'M': # the unit is GB so adjust for sizes like 512MB
      size /= 1000
-   price = float(items[l].find(text=re.compile("Your Price:")).split('$')[1])
+   price = float(items[l].find(text=re.compile("Your Price:")).split('$')[1].replace(',',''))
    myitems.append((size,price,title,link))
  
  maxl = [(x[0]/x[1]*1000,x) for x in myitems ] 
