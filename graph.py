@@ -7,7 +7,8 @@ def graph(myitems, title, out_name):
   g("set xtics nomirror")
   g("set ytics nomirror")
   g.set_string("output", out_name)
-  g.title(title)
+  if title:
+      g.title(title)
   g.xlabel('Size in GB')
   g.ylabel('GB/$');
   g("set style line 1 lc 1")
