@@ -22,6 +22,6 @@ def graph(myitems, title, out_name):
   ]
   for i, (d,title) in enumerate(ll):
     if d:
-      l.append(Gnuplot.Data(d, with="points ls %i"%(i+1), title = title))
+      l.append(Gnuplot.Data(d, **{'with':"points ls %i"%(i+1), 'title':title}))
   g.plot(*l)
 

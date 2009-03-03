@@ -23,7 +23,7 @@ f = open("result/flash.txt","w")
 g = Gnuplot.Gnuplot(debug=0)
 
 g.xlabel('Size in GB')
-g.ylabel('MB/$');
+g.ylabel('GB/$');
 g("set logscale x 2")
 g("set key left top")
 g.set_string("output","result/flash.png")
@@ -62,19 +62,19 @@ for entry in searches:
    price = float(items[l].find(text=re.compile("Your Price:")).split('$')[1].replace(',',''))
    myitems.append((size,price,title,link))
  
- maxl = [(x[0]/x[1]*1000,x) for x in myitems ] 
+ maxl = [(x[0]/x[1],x) for x in myitems ] 
  maxl.sort()
  maxl.reverse()
  
  f.write("<h5>"+entry[0] + ":</h5>\n"); # Title section on best list
- for x in range(5):
-   f.write("<p>%i. (%f MB/$) <a href=\"%s\">%s</a> - $%s</p>\n" % (x+1 , maxl[x][0] , maxl[x][1][3] , maxl[x][1][2] , maxl[x][1][1]))
+ for x in range(min(5, len(maxl))):
+   f.write("<p>%i. (%f GB/$) <a href=\"%s\">%s</a> - $%s</p>\n" % (x+1 , maxl[x][0] , maxl[x][1][3] , maxl[x][1][2] , maxl[x][1][1]))
 
  g("set style line %d lc %d" % (count, count))
 
  # throw plot data into array for later plotting
  # (Should be able to say g.replot(...) instead and have the data added to replot.)
- plotdata.append( Gnuplot.Data([(x[0],x[0]/x[1]*1000) for x in myitems ], with="points ls %d" % count, title = entry[0]) )
+ plotdata.append( Gnuplot.Data([(x[0],x[0]/x[1]) for x in myitems ], **{'with':"points ls %d" % count, 'title':entry[0]}) )
 
 # g.plot(plotdata) doesn't work, so eval a string in the form "g.plot(plotdata[0], plotdata[1], ... )"
 eval("g.plot(" + ", ".join(["plotdata[%d]" % x for x in range(len(plotdata))]) + ")")
