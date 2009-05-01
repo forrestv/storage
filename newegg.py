@@ -20,7 +20,6 @@ def get(N, *PropertyCodeValues):
             data.append(('PropertyCodeValue', PropertyCodeValue))
         url = 'http://www.newegg.com/Product/ProductList.aspx?'+urllib.urlencode(data)
         text = urllib.urlopen(url).read()
-        open("c/"+url.replace('/',''),'w').write(text)
         dom = BeautifulSoup.BeautifulSoup(text)
         header = dom.find('dd', {'class':'addToCart'}).parent.parent.parent.parent
         if not header:
