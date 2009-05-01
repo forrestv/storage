@@ -45,8 +45,8 @@ for entry in searches:
  text = urllib.urlopen(entry[1]).read()
  
  dom = BeautifulSoup(text)
- header = dom.find(text=re.compile("Product Description"))
- items = header.nextSibling.nextSibling.contents
+ header = dom.find('dd', {'class':'addToCart'}).parent.parent.parent.parent
+ items = header.contents
  
  for l in range(1,len(items),6):
    title = items[l].h3.a.contents[0]

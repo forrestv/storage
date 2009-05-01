@@ -19,16 +19,10 @@ def get(N, *PropertyCodeValues):
         for PropertyCodeValue in PropertyCodeValues:
             data.append(('PropertyCodeValue', PropertyCodeValue))
         url = 'http://www.newegg.com/Product/ProductList.aspx?'+urllib.urlencode(data)
-        print url
         text = urllib.urlopen(url).read()
-        print "_________"
-        print text
+        open("c/"+url.replace('/',''),'w').write(text)
         dom = BeautifulSoup.BeautifulSoup(text)
-        #header = dom.find(text=re.compile("Product Description"))
-
-        #<form name="formProductListDataGrid" 
-        header = dom.find('dd', {'class':'addToCart'})
-        print "HEADER", repr(header)
+        header = dom.find('dd', {'class':'addToCart'}).parent.parent.parent.parent
         if not header:
             print "lost header"
             break
@@ -40,8 +34,7 @@ def get(N, *PropertyCodeValues):
         if pager != page:
             print "lost pager2"
             break
-        items = header.nextSibling.nextSibling.contents
-        print repr(items)
+        items = header.contents
         for item in itertools.islice(items, 1, None, 6):
             title = item.h3.a.contents[0]
             if item.h3.contents[0] is not item.h3.a:
