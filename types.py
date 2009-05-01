@@ -2,7 +2,11 @@ import newegg
 import graph
 import best
 
-types = [('SATA', (2010150014, '359:15133')), ('USB', (2013240522,))]
+types = [
+('SATA', (2010150014, '359:15133', '359:7918')),
+('SATAs', (2010150380, '359:15133', '359:7918')),
+('USB', (2013240522,))
+]
 
 for type, call in types:
   print type

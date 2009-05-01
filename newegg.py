@@ -4,32 +4,44 @@ import BeautifulSoup
 import re
 import itertools
 
-def get(N, PropertyCodeValue=None):
+def get(N, *PropertyCodeValues):
     res = []
     for page in xrange(1, 100000):
         print page
         data = {
-            'Submit': 'Property' if PropertyCodeValue else 'ENE',
+            'Submit': 'Property', # if PropertyCodeValue else 'ENE',
             'N': str(N),
             'bop': 'And',
             'Pagesize': '100',
             'Page': str(page),
         }
-        if PropertyCodeValue:
-            data['PropertyCodeValue'] = PropertyCodeValue
+        data = data.items()
+        for PropertyCodeValue in PropertyCodeValues:
+            data.append(('PropertyCodeValue', PropertyCodeValue))
         url = 'http://www.newegg.com/Product/ProductList.aspx?'+urllib.urlencode(data)
+        print url
         text = urllib.urlopen(url).read()
+        print "_________"
+        print text
         dom = BeautifulSoup.BeautifulSoup(text)
-        header = dom.find(text=re.compile("Product Description"))
+        #header = dom.find(text=re.compile("Product Description"))
+
+        #<form name="formProductListDataGrid" 
+        header = dom.find('dd', {'class':'addToCart'})
+        print "HEADER", repr(header)
         if not header:
+            print "lost header"
             break
         pager = dom.find('span', {'class':'newPaging'})
         if not pager:
+            print "lost pager"
             break
         pager = int(pager.find('span', {'id':'active'}).contents[0])
         if pager != page:
+            print "lost pager2"
             break
         items = header.nextSibling.nextSibling.contents
+        print repr(items)
         for item in itertools.islice(items, 1, None, 6):
             title = item.h3.a.contents[0]
             if item.h3.contents[0] is not item.h3.a:
