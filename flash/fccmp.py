@@ -68,7 +68,7 @@ for entry in searches:
  
  f.write("<h5>"+entry[0] + ":</h5>\n"); # Title section on best list
  for x in range(min(5, len(maxl))):
-   f.write("<p>%i. (%f GB/$) <a href=\"%s\">%s</a> - $%s</p>\n" % (x+1 , maxl[x][0] , maxl[x][1][3] , maxl[x][1][2] , maxl[x][1][1]))
+   f.write("<p>%i. (%f GB/$) <a href=\"%s\">%s</a> - $%.02f</p>\n" % (x+1 , maxl[x][0] , maxl[x][1][3] , maxl[x][1][2] , maxl[x][1][1]))
 
  g("set style line %d lc %d" % (count, count))
 
