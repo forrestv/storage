@@ -19,6 +19,7 @@ def get(N, *PropertyCodeValues):
         for PropertyCodeValue in PropertyCodeValues:
             data.append(('PropertyCodeValue', PropertyCodeValue))
         url = 'http://www.newegg.com/Product/ProductList.aspx?'+urllib.urlencode(data)
+        print url
         text = urllib.urlopen(url).read()
         dom = BeautifulSoup.BeautifulSoup(text)
         header = dom.find('dd', {'class':'addToCart'}).parent.parent.parent.parent
@@ -39,7 +40,8 @@ def get(N, *PropertyCodeValues):
             if item.h3.contents[0] is not item.h3.a:
                 title = item.h3.contents[0] + title
             link = item.h3.a['href']
-            out = re.compile(" ([0-9.]*)([MGT])B ").findall(title)[0]
+            print repr(title)
+            out = re.compile(" ([0-9.]*)([MGT])B ").findall(title.upper())[0]
             size = float(out[0])
             if out[1] == 'M':
                 size /= 1000.
