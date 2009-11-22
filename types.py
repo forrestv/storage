@@ -1,3 +1,5 @@
+import time
+
 import newegg
 import graph
 import best
@@ -16,11 +18,12 @@ for type, call in types:
     myitems = newegg.get(*call)
     
     print 'Scraping'
+    t = time.time()
     myitems = list(myitems)
     
     print 'Graphing'
-    graph.graph(myitems, None, 'result/'+type+'.png')
+    graph.graph(myitems, None, 'result/' + type + '.png')
     
     print 'Itemizing'
-    b = best.best(myitems, 'result/'+type+'.txt')
-    open('record', 'a').write('%f %s %f' % (t, type, b))
+    b = best.best(myitems, 'result/' + type + '.txt')
+    open('record', 'a').write('%f %s %f\n' % (type, t, b))
