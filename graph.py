@@ -1,7 +1,8 @@
 import os
-import Gnuplot
 import random
 import time
+
+import Gnuplot
 
 def graph(myitems, title, out_name):
   tmp_name = out_name+".tmp"+str(random.randrange(2**24))

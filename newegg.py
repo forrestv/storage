@@ -1,8 +1,8 @@
-#!/usr/bin/python
 import urllib
-import BeautifulSoup
 import re
 import itertools
+
+import BeautifulSoup
 
 def get(N, *PropertyCodeValues):
     res = []
