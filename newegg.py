@@ -6,10 +6,11 @@ import itertools
 
 def get(N, *PropertyCodeValues):
     res = []
-    for page in xrange(1, 100000):
-        #print page
+    page = 1
+    while True:
+        print "Page", page
         data = {
-            'Submit': 'Property', # if PropertyCodeValue else 'ENE',
+            'Submit': 'Property',
             'N': str(N),
             'bop': 'And',
             'Pagesize': '100',
@@ -19,17 +20,9 @@ def get(N, *PropertyCodeValues):
         for PropertyCodeValue in PropertyCodeValues:
             data.append(('PropertyCodeValue', PropertyCodeValue))
         url = 'http://www.newegg.com/Product/ProductList.aspx?'+urllib.urlencode(data)
-        print url
         text = urllib.urlopen(url).read()
-        #print text
         dom = BeautifulSoup.BeautifulSoup(text)
-        header = dom.find('dd', {'class':'addToCart'})
-        #print 0,header
-        #print 1,header.parent
-        #print 2,header.parent.parent
-        #print 3,header.parent.parent.parent
-        #print 4,header.parent.parent.parent.parent
-        #header = dom.find('dd', {'class':'addToCart'}).parent.parent.parent.parent
+        header = dom.find('dd', {'class':'addToCart'}).parent.parent.parent.parent
         if not header:
             print "lost header"
             break
@@ -47,12 +40,21 @@ def get(N, *PropertyCodeValues):
             if item.h3.contents[0] is not item.h3.a:
                 title = item.h3.contents[0] + title
             link = item.h3.a['href']
-            print repr(title)
-            out = re.compile(" ([0-9.]*)([MGT])B ").findall(title.upper())[0]
+            try:
+                out = re.compile(" ([0-9.]*)([MGT])B ").findall(title.upper())[0]
+            except IndexError:
+                print "invalid size", repr(title)
+                continue
             size = float(out[0])
             if out[1] == 'M':
                 size /= 1000.
             elif out[1] == 'T':
                 size *= 1000.
-            price = float(item.find(text=re.compile("Your Price:")).split('$')[1])
+            try:
+                price = float(item.find(text=re.compile("Your Price:")).split('$')[1].replace(',',''))
+            except AttributeError:
+                print "invalid price", repr(title)
+                continue
             yield size, price, title, link
+        print "Page", page, "done"
+        page += 1
