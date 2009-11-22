@@ -26,4 +26,4 @@ for type, call in types:
     
     print 'Itemizing'
     b = best.best(myitems, 'result/' + type + '.txt')
-    open('record', 'a').write('%f %s %f\n' % (type, t, b))
+    open('record', 'a').write('%s %f %f\n' % (type, t, b))
