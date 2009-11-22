@@ -53,7 +53,10 @@ for entry in searches:
    if items[l].h3.contents[0] != items[l].h3.a:
      title = items[l].h3.contents[0] + title
    link = items[l].h3.a['href']
-   out = re.compile(" ([0-9.]*)([MGT])B").findall(title)[0] # dropped terminal space in regex - avoids barfing on strings like " 16GB("
+   try:
+       out = re.compile(" ([0-9.]*)([MGT])B").findall(title)[0] # dropped terminal space in regex - avoids barfing on strings like " 16GB("
+   except:
+       continue	
    size = float(out[0])
    if out[1] == 'T':
      size *= 1000

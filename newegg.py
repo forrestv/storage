@@ -7,7 +7,7 @@ import itertools
 def get(N, *PropertyCodeValues):
     res = []
     for page in xrange(1, 100000):
-        print page
+        #print page
         data = {
             'Submit': 'Property', # if PropertyCodeValue else 'ENE',
             'N': str(N),
@@ -21,8 +21,15 @@ def get(N, *PropertyCodeValues):
         url = 'http://www.newegg.com/Product/ProductList.aspx?'+urllib.urlencode(data)
         print url
         text = urllib.urlopen(url).read()
+        #print text
         dom = BeautifulSoup.BeautifulSoup(text)
-        header = dom.find('dd', {'class':'addToCart'}).parent.parent.parent.parent
+        header = dom.find('dd', {'class':'addToCart'})
+        #print 0,header
+        #print 1,header.parent
+        #print 2,header.parent.parent
+        #print 3,header.parent.parent.parent
+        #print 4,header.parent.parent.parent.parent
+        #header = dom.find('dd', {'class':'addToCart'}).parent.parent.parent.parent
         if not header:
             print "lost header"
             break
