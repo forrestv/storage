@@ -25,7 +25,7 @@ g = Gnuplot.Gnuplot(debug=0)
 g.xlabel('Size in GB')
 g.ylabel('GB/$');
 #g("set logscale x 2")
-g("set key left top")
+#g("set key left top")
 g.set_string("output","result/flash.png")
 
 g("set terminal png size 600,400 nocrop x000000 xFFFFFF xFFFFFF xFF0000 x00FF00 x0000FF")
