@@ -4,6 +4,13 @@ import itertools
 
 import BeautifulSoup
 
+def extract_text(t):
+    if not t:
+        return ""
+    if isinstance(t, (unicode, str)):
+        return t
+    return "".join(extract_text(c) for c in t)
+
 def get(N, *PropertyCodeValues):
     res = []
     page = 1
@@ -20,28 +27,24 @@ def get(N, *PropertyCodeValues):
         for PropertyCodeValue in PropertyCodeValues:
             data.append(('PropertyCodeValue', PropertyCodeValue))
         url = 'http://www.newegg.com/Product/ProductList.aspx?'+urllib.urlencode(data)
+        print url
         text = urllib.urlopen(url).read()
         dom = BeautifulSoup.BeautifulSoup(text)
-        header = dom.find('dd', {'class':'addToCart'}).parent.parent.parent.parent
-        if not header:
-            print "lost header"
-            break
-        pager = dom.find('span', {'class':'newPaging'})
+        pager = dom.find('input', {'name':'Page'})
         if not pager:
             print "lost pager"
             break
-        pager = int(pager.find('span', {'id':'active'}).contents[0])
+        pager = int(pager['value'])
         if pager != page:
             print "lost pager2"
             break
-        items = header.contents
-        for item in itertools.islice(items, 1, None, 6):
-            title = item.h3.a.contents[0]
-            if item.h3.contents[0] is not item.h3.a:
-                title = item.h3.contents[0] + title
-            link = item.h3.a['href']
+        for item in dom.findAll('div', {'class':'itemCell'}):
+            dom_desc = item.find('span', {'class':'itemDescription'})
+            title = dom_desc.contents[0]
+            title += " " + extract_text(item.find('ul', {'class':'itemFeatures'}))
+            link = dom_desc.parent['href']
             try:
-                out = re.compile(" ([0-9.]*)([MGT])B ").findall(title.upper())[0]
+                out = re.compile("([0-9.]+)([MGT])B").findall(title.upper())[0]
             except IndexError:
                 print "invalid size", repr(title)
                 continue
@@ -51,10 +54,13 @@ def get(N, *PropertyCodeValues):
             elif out[1] == 'T':
                 size *= 1000.
             try:
-                price = float(item.find(text=re.compile("Your Price:")).split('$')[1].replace(',',''))
-            except AttributeError:
-                print "invalid price", repr(title)
-                continue
+                price = float(extract_text(item.find('li', {'class':'priceFinal'})).split('$')[1].replace(',',''))
+            except:
+                try:
+                    price = float(extract_text(item.find('li', {'class':'priceList'})).split('$')[1].replace(',',''))
+                except:
+                    print "invalid price", repr(extract_text(item.find('li', {'class':'priceFinal'}))), repr(extract_text(item.find('li', {'class':'priceList'})))
+                    continue
             yield size, price, title, link
         print "Page", page, "done"
         page += 1
