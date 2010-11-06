@@ -44,7 +44,7 @@ def get(N, *PropertyCodeValues):
             title += " " + extract_text(item.find('ul', {'class':'itemFeatures'}))
             link = dom_desc.parent['href']
             try:
-                out = re.compile("([0-9.]+)([MGT])B").findall(title.upper())[0]
+                out = re.compile("[^0-9A-Za-z]([0-9.]+)([MGT])B").findall(title.upper())[0]
             except IndexError:
                 print "invalid size", repr(title)
                 continue
