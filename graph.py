@@ -7,7 +7,7 @@ import Gnuplot
 def graph(myitems, out_name):
     tmp_name = out_name+".tmp"+str(random.randrange(2**24))
     g = Gnuplot.Gnuplot(debug=1)
-    g("set terminal png size 600,400 nocrop x000000 xFFFFFF xFFFFFF xFF0000 x00FF00 x0000FF")
+    g("set terminal png size 600,400 nocrop x000000 xA9A9A9 xA9A9A9 xFF0000 x00FF00 x0000FF")
     g("set border 3")
     g("set xtics nomirror")
     g("set ytics nomirror")
