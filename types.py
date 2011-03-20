@@ -2,7 +2,7 @@ import os
 import time
 
 import newegg
-import graph
+#import graph
 import best
 
 types = [
@@ -30,8 +30,8 @@ for name, subtypes in types:
     print 'Scraping'
     items = dict((subname, list(newegg.get(*call))) for subname, call in subtypes.iteritems())
     
-    print 'Graphing'
-    graph.graph(dict((k, [(item[0], item[0]/item[1]) for item in v]) for k, v in items.iteritems()), os.path.join(result_dir, name + '.png'))
-    
+##    print 'Graphing'
+##    graph.graph(dict((k, [(item[0], item[0]/item[1]) for item in v]) for k, v in items.iteritems()), os.path.join(result_dir, name + '.png'))
+##    
     print 'Itemizing'
     best.best(name, items, os.path.join(result_dir, name + '.txt'), t, os.path.join(result_dir, 'record.txt'))

@@ -9,8 +9,8 @@ def best(name, type, outfile, t, recordfile):
             maxl.append((x[0]/x[1],x))
         maxl.sort(reverse=True)
         
-        for i, (gbprice, item) in zip(range(10), maxl):
-            s = u"<p>%i. (%f GB/$) <a href=\"%s\">%s</a> - $%s</p>\n" % (i+1, gbprice, item[3], item[2], item[1])
+        for i, (gbprice, item) in zip(range(20), maxl):
+            s = u"<p>%i. (%f GB/$) %s eggs (%s) <a href=\"%s\">%s</a> - $%s</p>\n" % (i+1, gbprice, item[5], item[4], item[3], item[2], item[1])
             f.write(s.encode("UTF-8"))
         
         record = name, subname, t, maxl[0][0] if maxl and maxl[0] else None

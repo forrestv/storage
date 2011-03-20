@@ -1,7 +1,7 @@
 import urllib
 import re
 import itertools
-
+import string
 import BeautifulSoup
 
 def extract_text(t):
@@ -39,10 +39,30 @@ def get(N, *PropertyCodeValues):
             print "lost pager2"
             break
         for item in dom.findAll('div', {'class':'itemCell'}):
+            #print "-----------------------\n\n"
             dom_desc = item.find('span', {'class':'itemDescription'})
             title = dom_desc.contents[0]
             title += " " + extract_text(item.find('ul', {'class':'itemFeatures'}))
             link = dom_desc.parent['href']
+            rating = item.findAll('a', {'class':'itemRating'})
+            eggs = "0"
+            for pk in rating:
+                #print "pk: " + str(pk)
+                pks = pk.findAll('span', limit=1)
+                #print str(pk.findNextSibling(text))
+                for pks_i in pks:
+                    eggs = str(pks_i['class'])[6]
+                    if len(eggs) == 0:
+                        eggs = "0"
+            votes = str(extract_text(rating))
+            if len(votes) > 8:
+                votes = votes[8:len(votes)-1]
+            else:
+                votes = "0"
+            #print "title: " + title
+            #print "link: " +link
+            #print "eggs: " + eggs + " votes: " + votes
+
             try:
                 out = re.compile("[^0-9A-Za-z]([0-9.]+)([MGT])B").findall(title.upper())[0]
             except IndexError:
@@ -61,6 +81,6 @@ def get(N, *PropertyCodeValues):
                 except:
                     print "invalid price", repr(extract_text(item.find('li', {'class':'priceFinal'}))), repr(extract_text(item.find('li', {'class':'priceList'})))
                     continue
-            yield size, price, title, link
+            yield size, price, title, link, votes, eggs
         print "Page", page, "done"
         page += 1
