@@ -1,6 +1,6 @@
 def best(name, type, outfile, t, recordfile):
     f = open(outfile, "w")
-    for subname, items in type.iteritems():
+    for subname, items in type:
         if subname:
             f.write((u"<h4>%s</h4>" % subname).encode("UTF-8"))
         

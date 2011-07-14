@@ -18,11 +18,14 @@ def get(N, *PropertyCodeValues):
         print "Page", page
         data = {
             'Submit': 'Property',
-            'N': str(N),
             'bop': 'And',
             'Pagesize': '100',
             'Page': str(page),
         }
+        if isinstance(N, dict):
+            data.update((k, str(v)) for k, v in N.iteritems())
+        else:
+            data['N'] = str(N)
         data = data.items()
         for PropertyCodeValue in PropertyCodeValues:
             data.append(('PropertyCodeValue', PropertyCodeValue))

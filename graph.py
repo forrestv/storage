@@ -19,7 +19,7 @@ def graph(myitems, out_name):
     g("set style line 3 lc 3")
     g("set style line 4 lc 4")
     l = []
-    for i, (k, v) in enumerate(myitems.iteritems()):
+    for i, (k, v) in enumerate(myitems):
         if v:
             params = {}
             params['with'] = "points ls %i" % (i+1)
