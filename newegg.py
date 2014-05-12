@@ -1,15 +1,23 @@
 import urllib
 import re
 import itertools
+import traceback
 import string
 import BeautifulSoup
 
 def extract_text(t):
     if not t:
         return ""
+    if t == '&ndash;': return ''
     if isinstance(t, (unicode, str)):
         return t
     return "".join(extract_text(c) for c in t)
+
+def extract_price(data):
+    res = sorted(float(x.replace(',', '')) for x in re.findall('\$([,0-9.]+)', data))
+    if not res: raise ValueError('no price in %r' % (data,))
+    return res[len(res)//2]
+    
 
 def get(N, *PropertyCodeValues):
     res = []
@@ -67,22 +75,28 @@ def get(N, *PropertyCodeValues):
             #print "eggs: " + eggs + " votes: " + votes
 
             try:
-                out = re.compile("[^0-9A-Za-z]([0-9.]+)([MGT])B").findall(title.upper())[0]
+                out = re.compile("[^0-9A-Za-z]([0-9.]+)( )?([MGT])B").findall(title.upper())[0]
             except IndexError:
                 print "invalid size", repr(title)
                 continue
             size = float(out[0])
-            if out[1] == 'M':
+            if out[2] == 'M':
                 size /= 1000.
-            elif out[1] == 'T':
+            elif out[2] == 'T':
                 size *= 1000.
             try:
-                price = float(extract_text(item.find('li', {'class':'priceFinal'})).split('$')[1].replace(',',''))
+               price = extract_price(extract_text(item))
             except:
+             traceback.print_exc()
+             try:
+                 price = float(extract_text(item.find('li', {'class':'price-current'})).split('$')[1].replace(',',''))
+             except:
+                traceback.print_exc()
                 try:
-                    price = float(extract_text(item.find('li', {'class':'priceList'})).split('$')[1].replace(',',''))
+                    price = float(extract_text(item.find('li', {'class':'priceBefore'})).split('$')[1].replace(',',''))
                 except:
-                    print "invalid price", repr(extract_text(item.find('li', {'class':'priceFinal'}))), repr(extract_text(item.find('li', {'class':'priceList'})))
+                    traceback.print_exc()
+                    #print "invalid price", repr(extract_text(item.find('li', {'class':'priceFinal'}))), repr(extract_text(item.find('li', {'class':'priceList'})))
                     continue
             yield size, price, title, link, votes, eggs
         print "Page", page, "done"
