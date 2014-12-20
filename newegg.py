@@ -75,7 +75,7 @@ def get(N, *PropertyCodeValues):
             #print "eggs: " + eggs + " votes: " + votes
 
             try:
-                out = re.compile("[^0-9A-Za-z]([0-9.]+)( )?([MGT])B").findall(title.upper())[0]
+                out = re.compile("[^0-9A-Za-z.]([0-9.]+)( )?([MGT])B").findall(title.upper())[0]
             except IndexError:
                 print "invalid size", repr(title)
                 continue
