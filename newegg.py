@@ -1,9 +1,11 @@
 import urllib
+import urllib2
 import re
 import itertools
 import traceback
 import string
 import BeautifulSoup
+import cookielib
 
 def extract_text(t):
     if not t:
@@ -39,13 +41,19 @@ def get(N, *PropertyCodeValues):
             data.append(('PropertyCodeValue', PropertyCodeValue))
         url = 'http://www.newegg.com/Product/ProductList.aspx?'+urllib.urlencode(data)
         print url
-        text = urllib.urlopen(url).read()
+        
+        req = urllib2.Request(url)
+        cj = cookielib.CookieJar()
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        text = opener.open(req).read()
+        text = opener.open(req).read()
+        
         dom = BeautifulSoup.BeautifulSoup(text)
-        pager = dom.find('input', {'name':'Page'})
+        pager = dom.find('li', {'name':'currentPage'})
         if not pager:
             print "lost pager"
             break
-        pager = int(pager['value'])
+        pager = int(extract_text(pager))
         if pager != page:
             print "lost pager2"
             break

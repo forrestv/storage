@@ -26,7 +26,8 @@ def graph(myitems, out_name):
             if k:
                 params['title'] = k
             l.append(Gnuplot.Data(v, **params))
-    g.plot(*l)
+    if l:
+        g.plot(*l)
     while not os.path.exists(tmp_name):
         time.sleep(1)
     os.rename(tmp_name, out_name)
