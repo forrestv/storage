@@ -28,6 +28,8 @@ types = [
 ]
 
 result_dir = os.path.join(os.path.dirname(__file__), "result")
+if not os.path.exists(result_dir):
+    os.makedirs(result_dir)
 
 for name, subtypes in types:
     t = time.time()
