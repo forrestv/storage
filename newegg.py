@@ -57,11 +57,9 @@ def get(N, *PropertyCodeValues):
         if pager != page:
             print "lost pager2"
             break
-        for item in dom.findAll('div', {'class':'itemCell'}):
-            #print "-----------------------\n\n"
-            dom_desc = item.find('span', {'class':'itemDescription'})
+        for item in dom.findAll('div', {'class': 'itemCell itemCell-ProductList itemCell-ProductGridList'}):
+            dom_desc = item.find('span', {'class': 'itemDescription'})
             title = dom_desc.contents[0]
-            title += " " + extract_text(item.find('ul', {'class':'itemFeatures'}))
             link = dom_desc.parent['href']
             rating = item.findAll('a', {'class':'itemRating'})
             eggs = "0"
