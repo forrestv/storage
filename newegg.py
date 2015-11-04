@@ -6,6 +6,7 @@ import traceback
 import string
 import BeautifulSoup
 import cookielib
+import time
 
 def extract_text(t):
     if not t:
@@ -45,8 +46,14 @@ def get(N, *PropertyCodeValues):
         req = urllib2.Request(url)
         cj = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-        text = opener.open(req).read()
-        text = opener.open(req).read()
+        while True:
+            try:
+                text = opener.open(req).read()
+                text = opener.open(req).read()
+            except:
+                traceback.print_exc()
+                time.sleep(5)
+            else: break
         
         dom = BeautifulSoup.BeautifulSoup(text)
         pager = dom.find('li', {'name':'currentPage'})
