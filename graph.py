@@ -25,9 +25,11 @@ def graph(myitems, out_name):
             params['with'] = "points ls %i" % (i+1)
             if k:
                 params['title'] = k
+            print i, len(v)
             l.append(Gnuplot.Data(v, **params))
     if l:
         g.plot(*l)
+    g.close()
     while not os.path.exists(tmp_name):
         time.sleep(1)
     os.rename(tmp_name, out_name)
